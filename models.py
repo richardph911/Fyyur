@@ -7,7 +7,6 @@ db = SQLAlchemy()
 
 class Venue(db.Model):
     __tablename__ = 'Venue'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     city = db.Column(db.String(120))
@@ -27,7 +26,6 @@ class Venue(db.Model):
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     city = db.Column(db.String(120))
