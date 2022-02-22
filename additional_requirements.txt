@@ -1,0 +1,5 @@
+pip install SQLAlchemy
+pip install --upgrade pip
+pip install postgres
+pip install Flask
+pip install Flask-Migrate
