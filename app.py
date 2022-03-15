@@ -5,7 +5,15 @@
 import json
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for
+from flask import (
+    Flask, 
+    render_template, 
+    request, 
+    Response, 
+    flash, 
+    redirect, 
+    url_for
+)
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
@@ -19,15 +27,15 @@ from datetime import datetime
 # App Config.
 #----------------------------------------------------------------------------#
 
-app = Flask(__name__)
-moment = Moment(app)
-app.config.from_object('config')
-db.init_app(app)
-# db = SQLAlchemy(app)
-# TODO: connect to a local postgresql database
-migrate = Migrate(app, db)
-# db.create_all()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://richardph911@localhost:5432/Fyyurdb'
+# app = Flask(__name__)
+# moment = Moment(app)
+# app.config.from_object('config')
+# db.init_app(app)
+# # db = SQLAlchemy(app)
+# # TODO: connect to a local postgresql database
+# migrate = Migrate(app, db)
+# # db.create_all()
+# # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://richardph911@localhost:5432/Fyyurdb'
 
 
 #----------------------------------------------------------------------------#
@@ -51,7 +59,6 @@ app.jinja_env.filters['datetime'] = format_datetime
 @app.route('/')
 def index():
   return render_template('pages/home.html')
-
 
 #  Venues
 #  ----------------------------------------------------------------
@@ -124,12 +131,12 @@ def show_venue(venue_id):
     artist = db.session.query(Artist.name, Artist.image_link).filter(Artist.id == show.artist_id).one()
     show_add = {
         "artist_id": show.artist_id,
-        "artist_name": artist.name,
-        "artist_image_link": artist.image_link,
-        "start_time": str(show.start_time)
+        "artist_name": show.artist.name,
+        "artist_image_link": show.artist.image_link,
+        "start_time": show.start_time.strftime("%m/%d/%Y, %H:%M")
         }
 
-    if (show.start_time < datetime.now()):
+    if (show.start_time <= datetime.now()):
         past_shows.append(show_add)
     else:
         upcoming_shows.append(show_add)
@@ -263,9 +270,9 @@ def show_artist(artist_id):
     venue = db.session.query(Venue.name, Venue.image_link).filter(Venue.id == show.venue_id).one()
     show_add = {
             "venue_id": show.venue_id,
-            "venue_name": venue.name,
-            "venue_image_link": venue.image_link,
-            "start_time": str(show.start_time)
+            "venue_name": show.venue.name,
+            "venue_image_link": show.venue.image_link,
+            "start_time": show.start_time.strftime("%m/%d/%Y, %H:%M")
     }
 
     if (show.start_time < datetime.now()):
@@ -297,9 +304,9 @@ def show_artist(artist_id):
 #  ----------------------------------------------------------------
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
+  # TODO: populate form with fields from artist with ID <artist_id>
   form = ArtistForm()
   artist = Artist.query.filter(Artist.id == artist_id).one()
-  # TODO: populate form with fields from artist with ID <artist_id>
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
@@ -408,7 +415,7 @@ def shows():
       "artist_id": show.artist_id,
       "artist_name": Artist.query.get(show.artist_id).name,
       "artist_image_link": Artist.query.get(show.artist_id).image_link,
-      "start_time": str(show.start_time)
+      "start_time": show.start_time.strftime("%m/%d/%Y, %H:%M")
     })
 
   return render_template('pages/shows.html', shows=data)

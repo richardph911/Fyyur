@@ -17,11 +17,12 @@ class Venue(db.Model):
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
     # adding missing fields
-    genres = db.Column(db.String(120))
+    genres = db.Column(db.ARRAY(db.String), nullable=False)
     facebook_link = db.Column(db.String(120))
     website = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(500))
+    shows = db.relationship('Show', backref='venue', lazy='joined', cascade="all, delete")
 
 
 class Artist(db.Model):
@@ -31,7 +32,7 @@ class Artist(db.Model):
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
+    genres = db.Column(db.ARRAY(db.String))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
 
@@ -40,6 +41,8 @@ class Artist(db.Model):
     website = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(500))
+    shows = db.relationship('Show', backref='artist', lazy='joined', cascade="all, delete")
+
 
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
