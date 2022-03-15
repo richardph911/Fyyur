@@ -237,22 +237,10 @@ def search_artists():
 
   search_term = request.form.get('search_term', '')
   artists = db.session.query(Artist).filter(Artist.name.ilike('%{}%'.format(search_term))).all()
-  data = []
-  for artist in artists:
-    num_upcoming_shows = 0
-    shows = db.session.query(Show).filter(Show.artist_id == artist.id)
-    for show in shows:
-      if(show.stat_time > datetime.now()):
-        num_upcoming_shows += 1
-        data.append({
-            "id": artist.id,
-            "name": artist.name,
-            "num_upcoming_shows": num_upcoming_shows
-        })
 
   response={
     "count": len(artists),
-    "data": data
+    "data": artists
   }
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
