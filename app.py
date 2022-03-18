@@ -27,13 +27,16 @@ from datetime import datetime
 # App Config.
 #----------------------------------------------------------------------------#
 
-# app = Flask(__name__)
-# moment = Moment(app)
+app = Flask(__name__)
+moment = Moment(app)
+app.config.from_object('config')
+db = SQLAlchemy(app)
+
 # app.config.from_object('config')
-# db.init_app(app)
+db.init_app(app)
 # # db = SQLAlchemy(app)
 # # TODO: connect to a local postgresql database
-# migrate = Migrate(app, db)
+migrate = Migrate(app, db)
 # # db.create_all()
 # # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://richardph911@localhost:5432/Fyyurdb'
 
